@@ -1,3 +1,5 @@
+github.com/s0rg/set v1.2.4 h1:e86pJUSYMHtAejfEayVflRZboAovHTjxt6LlENbaJME=
+github.com/s0rg/set v1.2.4/go.mod h1:bsrixFcfTI8u6t9Ym4eclLPVk8qeLiXCtBkvX217D6M=
 github.com/tdewolff/parse/v2 v2.8.11 h1:SGyjEy3xEqd+W9WVzTlTQ5GkP/en4a1AZNZVJ1cvgm0=
 github.com/tdewolff/parse/v2 v2.8.11/go.mod h1:Hwlni2tiVNKyzR1o6nUs4FOF07URA+JLBLd6dlIXYqo=
 github.com/tdewolff/test v1.0.11 h1:FdLbwQVHxqG16SlkGveC0JVyrJN62COWTRyUFzfbtBE=
