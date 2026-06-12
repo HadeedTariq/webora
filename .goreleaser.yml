@@ -1,15 +1,15 @@
 # .goreleaser.yml
 version: 2
-project_name: crawley
+project_name: webora
 
 before:
   hooks:
     - go mod download
 
 builds:
-  - id: crawley-bin
+  - id: webora-bin
     dir: .
-    main: ./cmd/crawley
+    main: ./cmd/webora
     env: [CGO_ENABLED=0]
     ldflags:
       - -s -w
@@ -29,9 +29,9 @@ builds:
         goarch: arm64
 
 archives:
-  - id: crawley
-    formats: ['tar.gz']
-    ids: [crawley-bin]
+  - id: webora
+    formats: ["tar.gz"]
+    ids: [webora-bin]
     name_template: >-
       {{ .ProjectName }}_
       {{- .Tag }}_
@@ -41,7 +41,7 @@ archives:
       {{- else }}{{ .Arch }}{{ end }}
     format_overrides:
       - goos: windows
-        formats: ['zip']
+        formats: ["zip"]
 
 nfpms:
   - id: packages
@@ -49,11 +49,11 @@ nfpms:
       {{ .ProjectName }}_
       {{- .Tag }}_
       {{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}
-    homepage: https://github.com/s0rg/crawley
+    homepage: https://github.com/s0rg/webora
     description: Unix-way web crawler, written in Golang.
     maintainer: s0rg
     license: MIT
-    vendor: Crawley
+    vendor: webora
     formats:
       - deb
       - rpm
@@ -61,8 +61,8 @@ nfpms:
 changelog:
   filters:
     exclude:
-      - '^chore'
-      - '^docs'
-      - '^refactor'
-      - '^style'
-      - '^test'
+      - "^chore"
+      - "^docs"
+      - "^refactor"
+      - "^style"
+      - "^test"

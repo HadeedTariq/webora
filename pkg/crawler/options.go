@@ -49,7 +49,7 @@ func WithDirsPolicy(v DirsPolicy) Option {
 	}
 }
 
-// WithSkipSSL tells crawley to skip any ssl handshake errors.
+// WithSkipSSL tells webora to skip any ssl handshake errors.
 func WithSkipSSL(v bool) Option {
 	return func(c *config) {
 		c.Client.SkipSSL = v

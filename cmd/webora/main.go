@@ -3,13 +3,17 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io"
+	"log"
 	"os"
 	"path/filepath"
 	"runtime"
 	"strings"
 	"time"
 
+	"github.com/HadeedTariq/webora/pkg/crawler"
 	"github.com/HadeedTariq/webora/pkg/values"
+	"github.com/s0rg/compflag"
 )
 
 const (
@@ -26,7 +30,7 @@ var (
 	defaultUA = "Mozilla/5.0 (compatible; Win64; x64) Mr." + appName + "/" + GitTag + "-" + GitHash
 )
 
-// so the command line flags are liked
+// command-line flags.
 var (
 	fDepth, fWorkers        int
 	fSilent, fVersion       bool
@@ -38,9 +42,8 @@ var (
 	fRobotsPolicy, fUA      string
 	fDelay                  time.Duration
 	fTimeout                time.Duration
-	// for reading the files which references  are passed through the cli
-	cookies, headers values.Smart
-	tags, ignored    values.List
+	cookies, headers        values.Smart
+	tags, ignored           values.List
 )
 
 func version() string {
@@ -70,6 +73,21 @@ func puts(s string) {
 	_, _ = os.Stdout.WriteString(s + "\n")
 }
 
+func crawl(uri string, opts ...crawler.Option) error {
+	c := crawler.New(opts...)
+
+	log.Printf("[*] config: %s", c.DumpConfig())
+	log.Printf("[*] crawling url: %s", uri)
+
+	if err := c.Run(uri, puts); err != nil {
+		return fmt.Errorf("run: %w", err)
+	}
+
+	log.Printf("[*] complete")
+
+	return nil
+}
+
 func loadSmart() (h, c []string, err error) {
 	var wd string
 
@@ -96,6 +114,58 @@ func loadSmart() (h, c []string, err error) {
 	return h, c, nil
 }
 
+func parseFlags() (rv []crawler.Option, err error) {
+	robots, err := crawler.ParseRobotsPolicy(fRobotsPolicy)
+	if err != nil {
+		err = fmt.Errorf("robots policy: %w", err)
+
+		return
+	}
+
+	dirs, err := crawler.ParseDirsPolicy(fDirsPolicy)
+	if err != nil {
+		err = fmt.Errorf("dirs policy: %w", err)
+
+		return
+	}
+
+	uheaders, ucookies, err := loadSmart()
+	if err != nil {
+		err = fmt.Errorf("load: %w", err)
+
+		return
+	}
+
+	scanJS, scanCSS := fScanJS, fScanCSS
+
+	if fScanALL {
+		scanJS, scanCSS = true, true
+	}
+
+	rv = []crawler.Option{
+		crawler.WithUserAgent(fUA),
+		crawler.WithDelay(fDelay),
+		crawler.WithMaxCrawlDepth(fDepth),
+		crawler.WithWorkersCount(fWorkers),
+		crawler.WithSkipSSL(fSkipSSL),
+		crawler.WithBruteMode(fBrute),
+		crawler.WithDirsPolicy(dirs),
+		crawler.WithRobotsPolicy(robots),
+		crawler.WithoutHeads(fNoHeads),
+		crawler.WithScanJS(scanJS),
+		crawler.WithScanCSS(scanCSS),
+		crawler.WithExtraHeaders(uheaders),
+		crawler.WithExtraCookies(ucookies),
+		crawler.WithTagsFilter(tags.Values),
+		crawler.WithIgnored(ignored.Values),
+		crawler.WithProxyAuth(fProxyAuth),
+		crawler.WithTimeout(fTimeout),
+		crawler.WithSubdomains(fSubdomains),
+	}
+
+	return rv, nil
+}
+
 func setupFlags() {
 	flag.Var(&headers, "header",
 		"extra headers for request, can be used multiple times, accept files with '@'-prefix",
@@ -120,6 +190,10 @@ func setupFlags() {
 	flag.BoolVar(&fSilent, "silent", false, "suppress info and error messages in stderr")
 	flag.BoolVar(&fVersion, "version", false, "show version")
 
+	flag.StringVar(&fDirsPolicy, "dirs", crawler.DefaultDirsPolicy,
+		"policy for non-resource urls: show / hide / only")
+	flag.StringVar(&fRobotsPolicy, "robots", crawler.DefaultRobotsPolicy,
+		"policy for robots.txt: ignore / crawl / respect")
 	flag.StringVar(&fUA, "user-agent", defaultUA, "user-agent string")
 	flag.StringVar(&fProxyAuth, "proxy-auth", "", "credentials for proxy: user:password")
 
@@ -127,4 +201,41 @@ func setupFlags() {
 	flag.DurationVar(&fTimeout, "timeout", defaultTimeout, "request timeout (min: 1 second, max: 10 minutes)")
 
 	flag.Usage = usage
+}
+
+func main() {
+	setupFlags()
+
+	if compflag.Complete() {
+		os.Exit(0)
+	}
+
+	flag.Parse()
+
+	if fVersion {
+		puts(version())
+
+		return
+	}
+
+	if flag.NArg() != 1 {
+		usage()
+
+		return
+	}
+
+	opts, err := parseFlags()
+	if err != nil {
+		log.Fatal("[-] options:", err)
+	}
+
+	if fSilent {
+		log.SetOutput(io.Discard)
+	}
+
+	if err := crawl(flag.Arg(0), opts...); err != nil {
+		// forcing back stderr in case of errors, otherwise, if 'silent' is on - no one will knows what happened.
+		log.SetOutput(os.Stderr)
+		log.Fatal("[-] crawler:", err)
+	}
 }

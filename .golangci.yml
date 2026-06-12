@@ -60,7 +60,7 @@ linters:
         path: ._test\.go
       - linters:
           - nakedret
-        path: cmd/crawley/main.go
+        path: cmd/webora/main.go
     paths:
       - third_party$
       - builtin$
