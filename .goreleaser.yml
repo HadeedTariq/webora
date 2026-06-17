@@ -49,9 +49,9 @@ nfpms:
       {{ .ProjectName }}_
       {{- .Tag }}_
       {{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}
-    homepage: https://github.com/s0rg/webora
-    description: Unix-way web crawler, written in Golang.
-    maintainer: s0rg
+    homepage: https://github.com/HadeedTariq/webora
+    description: An automated attack-surface and SEO mapping crawler written in Go.
+    maintainer: HadeedTariq
     license: MIT
     vendor: webora
     formats:
