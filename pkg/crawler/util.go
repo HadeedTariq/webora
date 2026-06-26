@@ -70,7 +70,7 @@ func prepareFilter(tags []string) links.TokenFilter {
 	}
 }
 
-func canCrawl(a, b *url.URL, d int, subdomains bool) (yes bool) {
+func canCrawl(a, b *url.URL, d int, subdomains bool, include string) (yes bool) {
 	if a.Host != b.Host {
 		if !subdomains {
 			return false
@@ -113,6 +113,10 @@ func canCrawl(a, b *url.URL, d int, subdomains bool) (yes bool) {
 	}
 
 	if d >= 0 && depth > d {
+		return false
+	}
+
+	if include != "all" && !strings.Contains(b.String(), include) {
 		return false
 	}
 

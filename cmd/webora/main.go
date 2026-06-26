@@ -33,6 +33,7 @@ var (
 // command-line flags.
 var (
 	fDepth, fWorkers        int
+	fInclude, fMatchRegex   string
 	fSilent, fVersion       bool
 	fBrute, fNoHeads        bool
 	fSkipSSL, fScanJS       bool
@@ -145,6 +146,7 @@ func parseFlags() (rv []crawler.Option, err error) {
 	rv = []crawler.Option{
 		crawler.WithUserAgent(fUA),
 		crawler.WithDelay(fDelay),
+		crawler.WithInclude(fInclude),
 		crawler.WithMaxCrawlDepth(fDepth),
 		crawler.WithWorkersCount(fWorkers),
 		crawler.WithSkipSSL(fSkipSSL),
@@ -189,7 +191,9 @@ func setupFlags() {
 	flag.BoolVar(&fSkipSSL, "skip-ssl", false, "skip ssl verification")
 	flag.BoolVar(&fSilent, "silent", false, "suppress info and error messages in stderr")
 	flag.BoolVar(&fVersion, "version", false, "show version")
-
+	flag.StringVar(&fInclude, "include", crawler.DefaultIncludePolicy,
+		"can include the specific urls of the site that have to be crawled",
+	)
 	flag.StringVar(&fDirsPolicy, "dirs", crawler.DefaultDirsPolicy,
 		"policy for non-resource urls: show / hide / only")
 	flag.StringVar(&fRobotsPolicy, "robots", crawler.DefaultRobotsPolicy,

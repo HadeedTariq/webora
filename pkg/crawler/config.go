@@ -20,6 +20,7 @@ const (
 type config struct {
 	AlowedTags []string
 	Ignored    []string
+	Include    string
 	Client     client.Config
 	Delay      time.Duration
 	Depth      int
@@ -55,6 +56,10 @@ func (c *config) String() (rv string) {
 
 	if c.Subdomains {
 		sb.WriteString(" +subdomains")
+	}
+
+	if c.Include != "all" {
+		fmt.Fprintf(&sb, " include: %s", c.Include)
 	}
 
 	return sb.String()

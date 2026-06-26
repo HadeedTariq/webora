@@ -10,6 +10,8 @@ const (
 	DefaultRobotsPolicy = "ignore"
 	// DefaultDirsPolicy is a default policy name for non-resource URLs.
 	DefaultDirsPolicy = "show"
+	// so let say the default include policy will be crawl all
+	DefaultIncludePolicy = "all"
 )
 
 // ErrUnknownPolicy is returned when requested policy unknown.

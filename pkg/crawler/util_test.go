@@ -119,6 +119,7 @@ func TestCanCrawl(t *testing.T) {
 		u          *url.URL
 		d          int
 		subdomains bool
+		include    string
 	}
 
 	base, _ := url.Parse("http://test/some/path")
@@ -159,7 +160,7 @@ func TestCanCrawl(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
 
-			if gotYes := canCrawl(tc.args.b, tc.args.u, tc.args.d, tc.args.subdomains); gotYes != tc.wantYes {
+			if gotYes := canCrawl(tc.args.b, tc.args.u, tc.args.d, tc.args.subdomains, tc.args.include); gotYes != tc.wantYes {
 				t.Errorf("canCrawl() = %v, want %v", gotYes, tc.wantYes)
 			}
 		})

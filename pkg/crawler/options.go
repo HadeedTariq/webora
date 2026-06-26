@@ -14,6 +14,12 @@ func WithUserAgent(v string) Option {
 	}
 }
 
+func WithInclude(v string) Option {
+	return func(c *config) {
+		c.Include = v
+	}
+}
+
 // WithDelay sets crawl delay.
 func WithDelay(v time.Duration) Option {
 	return func(c *config) {

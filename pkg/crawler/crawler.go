@@ -175,7 +175,7 @@ func (c *Crawler) tryEnqueue(base *url.URL, r *crawlResult) (yes bool) {
 		return
 	}
 
-	if !canCrawl(base, u, c.cfg.Depth, c.cfg.Subdomains) ||
+	if !canCrawl(base, u, c.cfg.Depth, c.cfg.Subdomains, c.cfg.Include) ||
 		c.robots.Forbidden(u.Path) ||
 		(c.cfg.Dirs == DirsOnly && isResorce(u.Path)) {
 		return
@@ -218,7 +218,6 @@ func (c *Crawler) initRobots(host *url.URL, web crawlClient) {
 
 		if !errors.As(err, &herr) {
 			log.Println("[-] GET /robots.txt:", err)
-
 			return
 		}
 
