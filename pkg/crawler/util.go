@@ -117,6 +117,7 @@ func canCrawl(a, b *url.URL, d int, subdomains bool, include string) (yes bool) 
 	}
 
 	if include != "all" && !strings.Contains(b.String(), include) {
+		log.Printf("[FILTERED DROP] Skipping out-of-bounds target: %s", b.String())
 		return false
 	}
 

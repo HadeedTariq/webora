@@ -271,7 +271,18 @@ func (c *Crawler) isIgnored(v string) (yes bool) {
 	})
 }
 
+func (c *Crawler) isIncluded(v string) (yes bool) {
+	if c.cfg.Include == "all" {
+		return true
+	}
+
+	return strings.Contains(v, c.cfg.Include)
+}
+
 func (c *Crawler) linkHandler(a atom.Atom, s string) {
+	if !c.isIncluded(s) {
+		return
+	}
 	r := crawlResult{
 		URI:  s,
 		Hash: urlhash(s),

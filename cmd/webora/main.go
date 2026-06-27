@@ -192,8 +192,9 @@ func setupFlags() {
 	flag.BoolVar(&fSilent, "silent", false, "suppress info and error messages in stderr")
 	flag.BoolVar(&fVersion, "version", false, "show version")
 	flag.StringVar(&fInclude, "include", crawler.DefaultIncludePolicy,
-		"can include the specific urls of the site that have to be crawled",
-	)
+		"URLs to include in the crawl")
+	flag.StringVar(&fMatchRegex, "regex", crawler.DefaultRegexPolicy,
+		"regex pattern for matching URLs")
 	flag.StringVar(&fDirsPolicy, "dirs", crawler.DefaultDirsPolicy,
 		"policy for non-resource urls: show / hide / only")
 	flag.StringVar(&fRobotsPolicy, "robots", crawler.DefaultRobotsPolicy,

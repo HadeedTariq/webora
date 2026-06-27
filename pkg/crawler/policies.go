@@ -12,6 +12,7 @@ const (
 	DefaultDirsPolicy = "show"
 	// so let say the default include policy will be crawl all
 	DefaultIncludePolicy = "all"
+	DefaultRegexPolicy   = ""
 )
 
 // ErrUnknownPolicy is returned when requested policy unknown.
