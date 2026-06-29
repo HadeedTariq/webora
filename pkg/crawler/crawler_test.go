@@ -589,9 +589,11 @@ func TestCrawlerBadEmit(t *testing.T) {
 	t.Parallel()
 
 	c := New(WithoutHeads(true))
-	c.handleCh = make(chan string, 1)
+	c.handleCh = make(chan crawlResult, 1)
 
-	c.tryHandle("no-slash")
+	c.tryHandle(crawlResult{
+		URI: "no-slash",
+	})
 
 	close(c.handleCh)
 
@@ -976,7 +978,9 @@ func TestCrawlerOverflow(t *testing.T) {
 	base, _ := url.Parse("http://test/")
 	res := crawlResult{URI: "http://test/foo"}
 
-	c.tryHandle("/")
+	c.tryHandle(crawlResult{
+		URI: "/",
+	})
 	c.linkHandler(atom.A, "")
 
 	if c.tryEnqueue(base, &res) {

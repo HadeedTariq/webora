@@ -21,6 +21,7 @@ func WithInclude(v string) Option {
 		c.Include = v
 	}
 }
+
 func WithRegex(pattern string) Option {
 	return func(c *config) {
 		if pattern == "" {
@@ -42,6 +43,17 @@ func WithRegex(pattern string) Option {
 func WithDelay(v time.Duration) Option {
 	return func(c *config) {
 		c.Delay = v
+	}
+}
+
+func WithJSONL(v bool) Option {
+	return func(c *config) {
+		c.Jsonl = v
+	}
+}
+func WithAuditStatus(v bool) Option {
+	return func(c *config) {
+		c.Auditing = v
 	}
 }
 

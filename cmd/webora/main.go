@@ -39,6 +39,7 @@ var (
 	fSkipSSL, fScanJS       bool
 	fScanCSS, fScanALL      bool
 	fSubdomains             bool
+	fJSONL, fAuditStatus    bool
 	fDirsPolicy, fProxyAuth string
 	fRobotsPolicy, fUA      string
 	fDelay                  time.Duration
@@ -148,6 +149,8 @@ func parseFlags() (rv []crawler.Option, err error) {
 		crawler.WithDelay(fDelay),
 		crawler.WithInclude(fInclude),
 		crawler.WithRegex(fMatchRegex),
+		crawler.WithJSONL(fJSONL),
+		crawler.WithAuditStatus(fAuditStatus),
 		crawler.WithMaxCrawlDepth(fDepth),
 		crawler.WithWorkersCount(fWorkers),
 		crawler.WithSkipSSL(fSkipSSL),
@@ -186,6 +189,8 @@ func setupFlags() {
 	flag.BoolVar(&fScanALL, "all", false, "scan all known sources (js/css/...)")
 	flag.BoolVar(&fBrute, "brute", false, "scan html comments")
 	flag.BoolVar(&fSubdomains, "subdomains", false, "Support subdomains (e.g. if www.domain.com found, recurse over it)")
+	flag.BoolVar(&fJSONL, "jsonl", false, "Output results in structured JSON Lines format")
+	flag.BoolVar(&fAuditStatus, "status", false, "Audit and report the HTTP status code of discovered URLs")
 	flag.BoolVar(&fScanCSS, "css", false, "scan css for urls")
 	flag.BoolVar(&fNoHeads, "headless", false, "disable pre-flight HEAD requests")
 	flag.BoolVar(&fScanJS, "js", false, "scan js code for endpoints")
@@ -226,7 +231,6 @@ func main() {
 
 	if flag.NArg() != 1 {
 		usage()
-
 		return
 	}
 

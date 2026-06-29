@@ -2,12 +2,14 @@ package crawler
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"net/url"
+	"os"
 	"slices"
 	"strings"
 	"sync"
@@ -44,15 +46,16 @@ const (
 )
 
 type crawlResult struct {
-	URI  string
-	Hash uint64
-	Flag taskFlag
+	URI        string
+	Hash       uint64
+	Flag       taskFlag
+	StatusCode int
 }
 
 // Crawler holds crawling process config and state.
 type Crawler struct {
 	cfg      *config
-	handleCh chan string
+	handleCh chan crawlResult
 	crawlCh  chan *url.URL
 	resultCh chan crawlResult
 	robots   *robots.TXT
@@ -88,7 +91,7 @@ func (c *Crawler) Run(uri string, urlcb func(string)) (err error) {
 	workers := c.cfg.Client.Workers
 
 	n := (workers + 1)
-	c.handleCh = make(chan string, n*chMult)
+	c.handleCh = make(chan crawlResult, n*chMult)
 	c.crawlCh = make(chan *url.URL, n*chMult)
 	c.resultCh = make(chan crawlResult, n*chMult)
 
@@ -107,8 +110,25 @@ func (c *Crawler) Run(uri string, urlcb func(string)) (err error) {
 	c.wg.Add(workers)
 
 	go func() {
-		for s := range c.handleCh {
-			urlcb(s)
+		for r := range c.handleCh {
+			if c.cfg.Jsonl {
+				out := map[string]interface{}{"url": r.URI}
+				if c.cfg.Auditing {
+					out["status"] = r.StatusCode
+				}
+				jsonData, err := json.Marshal(out)
+				if err == nil {
+					_, _ = os.Stdout.WriteString(string(jsonData) + "\n")
+				}
+				continue
+			}
+
+			if c.cfg.Auditing {
+				statusStr := fmt.Sprintf("[%d] %s\n", r.StatusCode, r.URI)
+				_, _ = os.Stdout.WriteString(statusStr)
+				continue
+			}
+			urlcb(r.URI)
 		}
 
 		c.wg.Done()
@@ -129,7 +149,7 @@ func (c *Crawler) Run(uri string, urlcb func(string)) (err error) {
 				w++
 			}
 
-			c.tryHandle(t.URI)
+			c.tryHandle(t)
 		}
 	}
 
@@ -141,19 +161,19 @@ func (c *Crawler) DumpConfig() string {
 	return c.cfg.String()
 }
 
-func (c *Crawler) tryHandle(u string) {
+func (c *Crawler) tryHandle(r crawlResult) {
 	show := true
 
-	idx := strings.LastIndexByte(u, '/')
+	idx := strings.LastIndexByte(r.URI, '/')
 	if idx == -1 {
 		return
 	}
 
 	switch c.cfg.Dirs {
 	case DirsHide:
-		show = isResorce(u[idx:])
+		show = isResorce(r.URI[idx:])
 	case DirsOnly:
-		show = !isResorce(u[idx:])
+		show = !isResorce(r.URI[idx:])
 	}
 
 	if !show {
@@ -164,7 +184,7 @@ func (c *Crawler) tryHandle(u string) {
 	defer t.Stop()
 
 	select {
-	case c.handleCh <- u:
+	case c.handleCh <- r:
 	case <-t.C:
 	}
 }

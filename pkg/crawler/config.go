@@ -33,6 +33,8 @@ type config struct {
 	ScanJS     bool
 	ScanCSS    bool
 	Subdomains bool
+	Jsonl      bool
+	Auditing   bool
 }
 
 func (c *config) String() (rv string) {
