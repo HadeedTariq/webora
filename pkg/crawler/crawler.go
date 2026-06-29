@@ -175,7 +175,7 @@ func (c *Crawler) tryEnqueue(base *url.URL, r *crawlResult) (yes bool) {
 		return
 	}
 
-	if !canCrawl(base, u, c.cfg.Depth, c.cfg.Subdomains, c.cfg.Include) ||
+	if !canCrawl(base, u, c.cfg.Depth, c.cfg.Subdomains, c.cfg.Include, c.cfg.Regex) ||
 		c.robots.Forbidden(u.Path) ||
 		(c.cfg.Dirs == DirsOnly && isResorce(u.Path)) {
 		return
@@ -272,11 +272,14 @@ func (c *Crawler) isIgnored(v string) (yes bool) {
 }
 
 func (c *Crawler) isIncluded(v string) (yes bool) {
-	if c.cfg.Include == "all" {
-		return true
+	if c.cfg.Include != "all" && !strings.Contains(v, c.cfg.Include) {
+		return false
+	}
+	if c.cfg.Regex != nil && !c.cfg.Regex.MatchString(v) {
+		return false
 	}
 
-	return strings.Contains(v, c.cfg.Include)
+	return true
 }
 
 func (c *Crawler) linkHandler(a atom.Atom, s string) {

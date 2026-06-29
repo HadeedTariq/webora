@@ -9,6 +9,7 @@ import (
 	"net/url"
 	"path"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	"github.com/HadeedTariq/webora/pkg/links"
@@ -70,7 +71,7 @@ func prepareFilter(tags []string) links.TokenFilter {
 	}
 }
 
-func canCrawl(a, b *url.URL, d int, subdomains bool, include string) (yes bool) {
+func canCrawl(a, b *url.URL, d int, subdomains bool, include string, re *regexp.Regexp) (yes bool) {
 	if a.Host != b.Host {
 		if !subdomains {
 			return false
@@ -118,6 +119,11 @@ func canCrawl(a, b *url.URL, d int, subdomains bool, include string) (yes bool) 
 
 	if include != "all" && !strings.Contains(b.String(), include) {
 		log.Printf("[FILTERED DROP] Skipping out-of-bounds target: %s", b.String())
+		return false
+	}
+
+	if re != nil && !re.MatchString(b.String()) {
+		log.Printf("[REGEX DROP] URL did not match regex filter: %s", b.String())
 		return false
 	}
 

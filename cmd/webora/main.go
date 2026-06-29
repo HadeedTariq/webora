@@ -147,6 +147,7 @@ func parseFlags() (rv []crawler.Option, err error) {
 		crawler.WithUserAgent(fUA),
 		crawler.WithDelay(fDelay),
 		crawler.WithInclude(fInclude),
+		crawler.WithRegex(fMatchRegex),
 		crawler.WithMaxCrawlDepth(fDepth),
 		crawler.WithWorkersCount(fWorkers),
 		crawler.WithSkipSSL(fSkipSSL),
@@ -193,7 +194,7 @@ func setupFlags() {
 	flag.BoolVar(&fVersion, "version", false, "show version")
 	flag.StringVar(&fInclude, "include", crawler.DefaultIncludePolicy,
 		"URLs to include in the crawl")
-	flag.StringVar(&fMatchRegex, "regex", crawler.DefaultRegexPolicy,
+	flag.StringVar(&fMatchRegex, "match-regex", crawler.DefaultRegexPolicy,
 		"regex pattern for matching URLs")
 	flag.StringVar(&fDirsPolicy, "dirs", crawler.DefaultDirsPolicy,
 		"policy for non-resource urls: show / hide / only")

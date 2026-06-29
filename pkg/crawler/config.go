@@ -2,6 +2,7 @@ package crawler
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 	"time"
 
@@ -21,6 +22,7 @@ type config struct {
 	AlowedTags []string
 	Ignored    []string
 	Include    string
+	Regex      *regexp.Regexp
 	Client     client.Config
 	Delay      time.Duration
 	Depth      int

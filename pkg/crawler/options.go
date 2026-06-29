@@ -1,6 +1,8 @@
 package crawler
 
 import (
+	"log"
+	"regexp"
 	"time"
 )
 
@@ -17,6 +19,22 @@ func WithUserAgent(v string) Option {
 func WithInclude(v string) Option {
 	return func(c *config) {
 		c.Include = v
+	}
+}
+func WithRegex(pattern string) Option {
+	return func(c *config) {
+		if pattern == "" {
+			c.Regex = nil
+			return
+		}
+
+		// Compile once right here at system startup
+		re, err := regexp.Compile(pattern)
+		if err != nil {
+			// Panic or log a fatal error if the user provided bad regex syntax
+			log.Fatalf("[!] Invalid regular expression pattern: %v", err)
+		}
+		c.Regex = re
 	}
 }
 

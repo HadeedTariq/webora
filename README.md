@@ -282,6 +282,18 @@ webora -depth -1 https://example.com
 webora -js https://example.com
 ```
 
+### Include specific URLs
+
+```bash
+webora -include "/blog,/docs" https://example.com
+```
+
+### Match URLs using a regular expression
+
+```bash
+webora -match-regex "\/youtube\/[0-9]+[a-zA-Z0-9\-]+$" https://example.com
+```
+
 ### Scan HTML comments
 
 ```bash
@@ -307,23 +319,25 @@ webora \
 
 # Common Flags
 
-| Flag          | Description                      |
-| ------------- | -------------------------------- |
-| `-depth`      | Maximum crawl depth              |
-| `-workers`    | Concurrent workers               |
-| `-delay`      | Delay between requests           |
-| `-timeout`    | HTTP timeout                     |
-| `-header`     | Custom request headers           |
-| `-cookie`     | Custom cookies                   |
-| `-user-agent` | User-Agent override              |
-| `-robots`     | robots.txt policy                |
-| `-proxy-auth` | Proxy authentication             |
-| `-skip-ssl`   | Disable certificate verification |
-| `-subdomains` | Include subdomains               |
-| `-headless`   | Skip HEAD pre-flight requests    |
-| `-js`         | Parse JavaScript                 |
-| `-css`        | Parse CSS                        |
-| `-brute`      | Scan HTML comments               |
+| Flag           | Description                      |
+| -------------- | -------------------------------- |
+| `-depth`       | Maximum crawl depth              |
+| `-workers`     | Concurrent workers               |
+| `-delay`       | Delay between requests           |
+| `-timeout`     | HTTP timeout                     |
+| `-header`      | Custom request headers           |
+| `-cookie`      | Custom cookies                   |
+| `-user-agent`  | User-Agent override              |
+| `-robots`      | robots.txt policy                |
+| `-proxy-auth`  | Proxy authentication             |
+| `-skip-ssl`    | Disable certificate verification |
+| `-subdomains`  | Include subdomains               |
+| `-headless`    | Skip HEAD pre-flight requests    |
+| `-js`          | Parse JavaScript                 |
+| `-css`         | Parse CSS                        |
+| `-brute`       | Scan HTML comments               |
+| `-include`     | Include specific URLs            |
+| `-match-regex` | Match URLs using a regex         |
 
 ---
 

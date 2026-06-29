@@ -2,6 +2,7 @@ package crawler
 
 import (
 	"net/url"
+	"regexp"
 	"testing"
 
 	"golang.org/x/net/html"
@@ -115,11 +116,12 @@ func TestCanCrawl(t *testing.T) {
 	t.Parallel()
 
 	type args struct {
-		b          *url.URL
-		u          *url.URL
-		d          int
-		subdomains bool
-		include    string
+		b            *url.URL
+		u            *url.URL
+		d            int
+		subdomains   bool
+		include      string
+		regexPattern *regexp.Regexp
 	}
 
 	base, _ := url.Parse("http://test/some/path")
@@ -160,7 +162,7 @@ func TestCanCrawl(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
 
-			if gotYes := canCrawl(tc.args.b, tc.args.u, tc.args.d, tc.args.subdomains, tc.args.include); gotYes != tc.wantYes {
+			if gotYes := canCrawl(tc.args.b, tc.args.u, tc.args.d, tc.args.subdomains, tc.args.include, tc.args.regexPattern); gotYes != tc.wantYes {
 				t.Errorf("canCrawl() = %v, want %v", gotYes, tc.wantYes)
 			}
 		})
