@@ -400,7 +400,7 @@ Webora is built around a simple principle:
 
 Rather than depending on heavyweight browser automation, Webora performs efficient HTTP crawling using optimized parsers, configurable networking, and concurrent execution to achieve fast and predictable performance.
 
-![coverage](https://img.shields.io/badge/coverage-85.4%25-brightgreen)
+![coverage](https://img.shields.io/badge/coverage-83.1%25-brightgreen)
 
 > > > > > > > b9bf68360a252534cff022bb299dbbed31010e3d
 > > > > > > > 9f854a2abcc2b98563c6ddfdd12bcee7f0fa60e4
