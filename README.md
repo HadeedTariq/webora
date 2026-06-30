@@ -1,4 +1,5 @@
 # Webora
+![coverage](https://img.shields.io/badge/coverage-81.2%25-brightgreen)
 
 <p align="center">
   <img src="./assets/logo.png" alt="Webora Logo" width="140"/>
