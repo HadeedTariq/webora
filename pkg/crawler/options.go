@@ -46,6 +46,12 @@ func WithDelay(v time.Duration) Option {
 	}
 }
 
+func WithJitter(v time.Duration) Option {
+	return func(c *config) {
+		c.Jitter = v
+	}
+}
+
 func WithJSONL(v bool) Option {
 	return func(c *config) {
 		c.Jsonl = v

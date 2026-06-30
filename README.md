@@ -340,6 +340,7 @@ webora \
 | `-match-regex` | Match URLs using a regex         |
 | `-jsonl`       | Output results as JSON Lines     |
 | `-status`      | Report HTTP status codes         |
+| `-jitter`      | Add random jitter duration       |
 
 ---
 

@@ -25,6 +25,7 @@ type config struct {
 	Regex      *regexp.Regexp
 	Client     client.Config
 	Delay      time.Duration
+	Jitter     time.Duration
 	Depth      int
 	Robots     RobotsPolicy
 	Dirs       DirsPolicy
@@ -40,7 +41,7 @@ type config struct {
 func (c *config) String() (rv string) {
 	var sb strings.Builder
 
-	fmt.Fprintf(&sb, "workers: %d depth: %d timeout: %s", c.Client.Workers, c.Depth, c.Client.Timeout)
+	fmt.Fprintf(&sb, "workers: %d depth: %d timeout: %s jitter: %s", c.Client.Workers, c.Depth, c.Client.Timeout, c.Jitter)
 
 	if c.Brute {
 		sb.WriteString(" brute: on")

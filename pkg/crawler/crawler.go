@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"math/rand/v2"
 	"net/http"
 	"net/url"
 	"os"
@@ -399,7 +400,21 @@ func (c *Crawler) worker(web crawlClient) {
 
 	for uri := range c.crawlCh {
 		if c.cfg.Delay > 0 {
-			time.Sleep(c.cfg.Delay)
+			sleepDuration := c.cfg.Delay
+
+			if c.cfg.Jitter > 0 {
+				jitterRange := int64(c.cfg.Jitter * 2)
+				randomJitter := time.Duration(rand.Int64N(jitterRange)) - c.cfg.Jitter
+
+				sleepDuration += randomJitter
+
+				// Safety guard: Make sure we don't accidentally get a negative sleep duration
+				if sleepDuration < 0 {
+					sleepDuration = 0
+				}
+			}
+
+			time.Sleep(sleepDuration)
 		}
 
 		ctx, cancel := context.WithTimeout(context.Background(), c.cfg.Client.Timeout)

@@ -20,6 +20,7 @@ const (
 	appName        = "Webora"
 	appSite        = "https://github.com/HadeedTariq/webora"
 	defaultDelay   = 150 * time.Millisecond
+	defaultJitter  = 5 * time.Millisecond
 	defaultTimeout = 5 * time.Second
 )
 
@@ -43,6 +44,7 @@ var (
 	fDirsPolicy, fProxyAuth string
 	fRobotsPolicy, fUA      string
 	fDelay                  time.Duration
+	fJitter                 time.Duration
 	fTimeout                time.Duration
 	cookies, headers        values.Smart
 	tags, ignored           values.List
@@ -147,6 +149,7 @@ func parseFlags() (rv []crawler.Option, err error) {
 	rv = []crawler.Option{
 		crawler.WithUserAgent(fUA),
 		crawler.WithDelay(fDelay),
+		crawler.WithJitter(fJitter),
 		crawler.WithInclude(fInclude),
 		crawler.WithRegex(fMatchRegex),
 		crawler.WithJSONL(fJSONL),
@@ -209,6 +212,8 @@ func setupFlags() {
 	flag.StringVar(&fProxyAuth, "proxy-auth", "", "credentials for proxy: user:password")
 
 	flag.DurationVar(&fDelay, "delay", defaultDelay, "per-request delay (0 - disable)")
+	flag.DurationVar(&fJitter, "jitter", defaultJitter, "maximum random jitter duration to add/subtract (e.g., 200ms)")
+
 	flag.DurationVar(&fTimeout, "timeout", defaultTimeout, "request timeout (min: 1 second, max: 10 minutes)")
 
 	flag.Usage = usage
