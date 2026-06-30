@@ -4,8 +4,11 @@ import (
 	"context"
 	"crypto/tls"
 	"io"
+	"log"
+	"math/rand"
 	"net"
 	"net/http"
+	"net/url"
 )
 
 // HTTP holds pre-configured http.Client.
@@ -14,12 +17,32 @@ type HTTP struct {
 	ua      string
 	cookies []*http.Cookie
 	headers []*header
+	proxies []*url.URL
 }
 
 // New creates and configure client for later use.
 func New(cfg *Config) (h *HTTP) {
+	var parsedProxies []*url.URL
+
+	for _, pStr := range cfg.Proxies {
+		if pStr == "" {
+			continue
+		}
+		pURL, err := url.Parse(pStr)
+		if err != nil {
+			log.Printf("[-] Warning: skipping invalid proxy URL %s: %v", pStr, err)
+			continue
+		}
+		parsedProxies = append(parsedProxies, pURL)
+	}
 	transport := &http.Transport{
-		Proxy: http.ProxyFromEnvironment,
+		Proxy: func(req *http.Request) (*url.URL, error) {
+			if len(parsedProxies) == 0 {
+				return nil, nil // No proxy, connect directly
+			}
+			randomIndex := rand.Intn(len(parsedProxies))
+			return parsedProxies[randomIndex], nil
+		},
 		Dial: (&net.Dialer{
 			Timeout: cfg.Timeout,
 		}).Dial,

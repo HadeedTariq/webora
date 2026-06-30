@@ -47,6 +47,7 @@ var (
 	fJitter                 time.Duration
 	fTimeout                time.Duration
 	cookies, headers        values.Smart
+	proxies                 values.Smart
 	tags, ignored           values.List
 )
 
@@ -92,7 +93,7 @@ func crawl(uri string, opts ...crawler.Option) error {
 	return nil
 }
 
-func loadSmart() (h, c []string, err error) {
+func loadSmart() (h, c, p []string, err error) {
 	var wd string
 
 	if wd, err = os.Getwd(); err != nil {
@@ -109,13 +110,19 @@ func loadSmart() (h, c []string, err error) {
 		return
 	}
 
+	if p, err = proxies.Load(fs); err != nil {
+		err = fmt.Errorf("proxies: %w", err)
+
+		return
+	}
+
 	if c, err = cookies.Load(fs); err != nil {
 		err = fmt.Errorf("cookies: %w", err)
 
 		return
 	}
 
-	return h, c, nil
+	return h, c, p, nil
 }
 
 func parseFlags() (rv []crawler.Option, err error) {
@@ -133,7 +140,7 @@ func parseFlags() (rv []crawler.Option, err error) {
 		return
 	}
 
-	uheaders, ucookies, err := loadSmart()
+	uheaders, ucookies, uproxies, err := loadSmart()
 	if err != nil {
 		err = fmt.Errorf("load: %w", err)
 
@@ -165,6 +172,7 @@ func parseFlags() (rv []crawler.Option, err error) {
 		crawler.WithScanCSS(scanCSS),
 		crawler.WithExtraHeaders(uheaders),
 		crawler.WithExtraCookies(ucookies),
+		crawler.WithExtraProxies(uproxies),
 		crawler.WithTagsFilter(tags.Values),
 		crawler.WithIgnored(ignored.Values),
 		crawler.WithProxyAuth(fProxyAuth),
@@ -181,6 +189,9 @@ func setupFlags() {
 	)
 	flag.Var(&cookies, "cookie",
 		"extra cookies for request, can be used multiple times, accept files with '@'-prefix",
+	)
+	flag.Var(&proxies, "proxies",
+		"proxies for request, can be used multiple times, accept files with '@'-prefix",
 	)
 
 	flag.Var(&tags, "tag", "tags filter, single or comma-separated tag names")

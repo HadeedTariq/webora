@@ -126,6 +126,13 @@ func WithExtraCookies(v []string) Option {
 	}
 }
 
+// WithExtraProxies add proxies to requests.
+func WithExtraProxies(v []string) Option {
+	return func(c *config) {
+		c.Client.Proxies = v
+	}
+}
+
 // WithTagsFilter apply tag filter for crawler.
 func WithTagsFilter(v []string) Option {
 	return func(c *config) {
