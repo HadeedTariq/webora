@@ -338,6 +338,8 @@ webora \
 | `-brute`       | Scan HTML comments               |
 | `-include`     | Include specific URLs            |
 | `-match-regex` | Match URLs using a regex         |
+| `-jsonl`       | Output results as JSON Lines     |
+| `-status`      | Report HTTP status codes         |
 
 ---
 
