@@ -319,28 +319,30 @@ webora \
 
 # Common Flags
 
-| Flag           | Description                      |
-| -------------- | -------------------------------- |
-| `-depth`       | Maximum crawl depth              |
-| `-workers`     | Concurrent workers               |
-| `-delay`       | Delay between requests           |
-| `-timeout`     | HTTP timeout                     |
-| `-header`      | Custom request headers           |
-| `-cookie`      | Custom cookies                   |
-| `-user-agent`  | User-Agent override              |
-| `-robots`      | robots.txt policy                |
-| `-proxy-auth`  | Proxy authentication             |
-| `-skip-ssl`    | Disable certificate verification |
-| `-subdomains`  | Include subdomains               |
-| `-headless`    | Skip HEAD pre-flight requests    |
-| `-js`          | Parse JavaScript                 |
-| `-css`         | Parse CSS                        |
-| `-brute`       | Scan HTML comments               |
-| `-include`     | Include specific URLs            |
-| `-match-regex` | Match URLs using a regex         |
-| `-jsonl`       | Output results as JSON Lines     |
-| `-status`      | Report HTTP status codes         |
-| `-jitter`      | Add random jitter duration       |
+| Flag             | Description                                                 |
+| ---------------- | ----------------------------------------------------------- |
+| `-depth`         | Maximum crawl depth                                         |
+| `-workers`       | Concurrent workers                                          |
+| `-delay`         | Delay between requests                                      |
+| `-timeout`       | HTTP timeout                                                |
+| `-header`        | Custom request headers                                      |
+| `-cookie`        | Custom cookies                                              |
+| `-user-agent`    | User-Agent override                                         |
+| `-robots`        | robots.txt policy                                           |
+| `-proxy-auth`    | Proxy authentication                                        |
+| `-skip-ssl`      | Disable certificate verification                            |
+| `-subdomains`    | Include subdomains                                          |
+| `-headless`      | Skip HEAD pre-flight requests                               |
+| `-js`            | Parse JavaScript                                            |
+| `-css`           | Parse CSS                                                   |
+| `-brute`         | Scan HTML comments                                          |
+| `-include`       | Include specific URLs                                       |
+| `-match-regex`   | Match URLs using a regex                                    |
+| `-jsonl`         | Output results as JSON Lines                                |
+| `-status`        | Report HTTP status codes                                    |
+| `-jitter`        | Add random jitter duration                                  |
+| `-proxies`       | Rotates traffic through a pool of proxies                   |
+| `-custom-agents` | Rotates traffic through a pool of custom User-Agent headers |
 
 ---
 

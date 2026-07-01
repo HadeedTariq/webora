@@ -7,6 +7,7 @@ type Config struct {
 	Headers   []string
 	Cookies   []string
 	Proxies   []string
+	Agents    []string
 	Workers   int
 	Timeout   time.Duration
 	SkipSSL   bool

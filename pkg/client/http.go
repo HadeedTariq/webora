@@ -13,11 +13,12 @@ import (
 
 // HTTP holds pre-configured http.Client.
 type HTTP struct {
-	c       *http.Client
-	ua      string
-	cookies []*http.Cookie
-	headers []*header
-	proxies []*url.URL
+	c           *http.Client
+	ua          string
+	extraAgents []string
+	cookies     []*http.Cookie
+	headers     []*header
+	proxies     []*url.URL
 }
 
 // New creates and configure client for later use.
@@ -62,10 +63,11 @@ func New(cfg *Config) (h *HTTP) {
 	}
 
 	return &HTTP{
-		ua:      cfg.UserAgent,
-		c:       client,
-		headers: prepareHeaders(cfg.Headers),
-		cookies: prepareCookies(cfg.Cookies),
+		ua:          cfg.UserAgent,
+		c:           client,
+		extraAgents: cfg.Agents,
+		headers:     prepareHeaders(cfg.Headers),
+		cookies:     prepareCookies(cfg.Cookies),
 	}
 }
 
@@ -123,7 +125,14 @@ func (h *HTTP) request(req *http.Request) (body io.ReadCloser, hdrs http.Header,
 	req.Header.Set("Accept", "text/html,application/xhtml+xml;q=0.9,*/*;q=0.5")
 	req.Header.Set("Accept-Language", "en-US,en;q=0.8")
 	req.Header.Set("Cache-Control", "no-cache")
-	req.Header.Set("User-Agent", h.ua)
+	var userAgent string
+	if len(h.extraAgents) > 0 {
+		randomIndex := rand.Intn(len(h.extraAgents))
+		userAgent = h.extraAgents[randomIndex]
+	} else {
+		userAgent = h.ua
+	}
+	req.Header.Set("User-Agent", userAgent)
 	req.Header.Set("Referer", req.URL.String())
 
 	h.enrich(req)

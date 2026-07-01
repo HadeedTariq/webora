@@ -133,6 +133,13 @@ func WithExtraProxies(v []string) Option {
 	}
 }
 
+// WithExtraAgents add extra agents for the request.
+func WithExtraAgents(v []string) Option {
+	return func(c *config) {
+		c.Client.Agents = v
+	}
+}
+
 // WithTagsFilter apply tag filter for crawler.
 func WithTagsFilter(v []string) Option {
 	return func(c *config) {
