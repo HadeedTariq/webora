@@ -1,5 +1,4 @@
 # Webora
-![coverage](https://img.shields.io/badge/coverage-81.2%25-brightgreen)
 
 <p align="center">
   <img src="./assets/logo.png" alt="Webora Logo" width="140"/>
@@ -368,6 +367,147 @@ webora \
 ✔ MIME-aware resource filtering
 
 ✔ Cross-platform CLI
+
+---
+
+# Real-World Use Cases
+
+Webora is designed to be useful across development, security, DevOps, and automation workflows.
+
+## API Endpoint Discovery
+
+Discover REST, GraphQL, and hidden application endpoints referenced inside HTML, JavaScript, and CSS files.
+
+Useful for:
+
+- API documentation generation
+- Reverse engineering web applications
+- Security assessments
+- Integration analysis
+
+---
+
+## Attack Surface Mapping
+
+Quickly enumerate publicly accessible resources to understand an application's exposed surface.
+
+Discover:
+
+- Login portals
+- Admin panels
+- API routes
+- Static assets
+- Documentation pages
+- Hidden directories
+
+---
+
+## Security Reconnaissance
+
+Collect URLs before running vulnerability scanners or manual penetration tests.
+
+Webora can help identify:
+
+- Forgotten endpoints
+- Development paths
+- Internal API references
+- Backup files
+- Archived resources
+- Comment-based URLs
+
+---
+
+## Large Website Crawling
+
+Efficiently crawl websites containing thousands or millions of pages while maintaining a low memory footprint through streaming parsing and concurrent execution.
+
+Ideal for:
+
+- Enterprise websites
+- Documentation platforms
+- E-commerce stores
+- News portals
+
+---
+
+## API Inventory
+
+Automatically build an inventory of application endpoints referenced throughout a website.
+
+Useful for:
+
+- API governance
+- Service inventory
+- Migration projects
+- Documentation validation
+
+---
+
+## Broken Link Detection
+
+Crawl websites and collect internal links for validation or integration with external link-checking tools.
+
+Useful during:
+
+- Website migrations
+- SEO audits
+- Content management
+- Documentation maintenance
+
+---
+
+## Asset Discovery
+
+Identify resources referenced across a website including:
+
+- JavaScript bundles
+- Stylesheets
+- Images
+- Fonts
+- Media files
+- Downloadable documents
+
+Useful for optimization and auditing.
+
+---
+
+## robots.txt & Sitemap Analysis
+
+Extract information from `robots.txt` and sitemap declarations to discover pages that may not be linked through normal navigation.
+
+Useful for:
+
+- Site auditing
+- SEO analysis
+- Reconnaissance
+- Content discovery
+
+---
+
+## Continuous Website Monitoring
+
+Run Webora as part of scheduled automation to detect newly exposed endpoints, pages, or assets over time.
+
+Useful for:
+
+- CI/CD pipelines
+- Security monitoring
+- Website change detection
+- Compliance checks
+
+---
+
+## Data Collection Pipelines
+
+Use JSON Lines output to integrate Webora into automation workflows.
+
+Example integrations include:
+
+- SIEM platforms
+- Search indexing
+- Data lakes
+- Analytics pipelines
+- Asset inventories
 
 ---
 
