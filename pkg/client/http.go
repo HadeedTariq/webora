@@ -72,7 +72,7 @@ func New(cfg *Config) (h *HTTP) {
 }
 
 // Get sends http GET request, returns non-closed body or error.
-func (h *HTTP) Get(ctx context.Context, url string) (body io.ReadCloser, hdrs http.Header, err error) {
+func (h *HTTP) Get(ctx context.Context, url string) (body io.ReadCloser, hdrs http.Header, statusCode int, err error) {
 	var req *http.Request
 
 	if req, err = http.NewRequestWithContext(
@@ -84,11 +84,11 @@ func (h *HTTP) Get(ctx context.Context, url string) (body io.ReadCloser, hdrs ht
 		return
 	}
 
-	if body, hdrs, err = h.request(req); err != nil {
+	if body, hdrs, statusCode, err = h.request(req); err != nil {
 		return
 	}
 
-	return body, hdrs, nil
+	return body, hdrs, statusCode, nil
 }
 
 // Head sends http HEAD request, return response headers or error.
@@ -106,7 +106,7 @@ func (h *HTTP) Head(ctx context.Context, url string) (hdrs http.Header, err erro
 
 	var body io.ReadCloser
 
-	if body, hdrs, err = h.request(req); err != nil {
+	if body, hdrs, _, err = h.request(req); err != nil {
 		return
 	}
 
@@ -121,7 +121,7 @@ func Discard(rc io.ReadCloser) {
 	_ = rc.Close()
 }
 
-func (h *HTTP) request(req *http.Request) (body io.ReadCloser, hdrs http.Header, err error) {
+func (h *HTTP) request(req *http.Request) (body io.ReadCloser, hdrs http.Header, statusCode int, err error) {
 	req.Header.Set("Accept", "text/html,application/xhtml+xml;q=0.9,*/*;q=0.5")
 	req.Header.Set("Accept-Language", "en-US,en;q=0.8")
 	req.Header.Set("Cache-Control", "no-cache")
@@ -147,7 +147,7 @@ func (h *HTTP) request(req *http.Request) (body io.ReadCloser, hdrs http.Header,
 		err = ErrFromResp(resp)
 	}
 
-	return resp.Body, resp.Header, err
+	return resp.Body, resp.Header, resp.StatusCode, err
 }
 
 func (h *HTTP) enrich(req *http.Request) {

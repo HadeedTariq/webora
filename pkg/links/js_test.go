@@ -24,7 +24,7 @@ func TestExtractJSError(t *testing.T) {
 		c int
 	)
 
-	ExtractJS(&r, func(_ string) {
+	ExtractJS(&r, func(_ string, code ...int) {
 		c++
 	})
 
@@ -74,7 +74,7 @@ func TestExtractJS(t *testing.T) {
 
 	var c int
 
-	ExtractJS(strings.NewReader(js), func(_ string) {
+	ExtractJS(strings.NewReader(js), func(_ string, code ...int) {
 		c++
 	})
 

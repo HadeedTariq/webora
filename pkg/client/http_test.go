@@ -61,7 +61,7 @@ func TestHTTPGetOK(t *testing.T) {
 
 	defer ts.Close()
 
-	res, _, err := c.Get(t.Context(), ts.URL)
+	res, _, _, err := c.Get(t.Context(), ts.URL)
 	if err != nil {
 		t.Fatal("get:", err)
 	}
@@ -91,17 +91,17 @@ func TestHTTPGetERR(t *testing.T) {
 
 	defer ts.Close()
 
-	if _, _, err := c.Get(t.Context(), "["); err == nil {
+	if _, _, _, err := c.Get(t.Context(), "["); err == nil {
 		t.Error("url - err is nil")
 	}
 
 	var ctx context.Context
 
-	if _, _, err := c.Get(ctx, ts.URL); err == nil {
+	if _, _, _, err := c.Get(ctx, ts.URL); err == nil {
 		t.Error("ctx - err is nil")
 	}
 
-	if _, _, err := c.Get(t.Context(), ts.URL); err == nil {
+	if _, _, _, err := c.Get(t.Context(), ts.URL); err == nil {
 		t.Error("status - err is nil")
 	}
 }

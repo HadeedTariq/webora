@@ -18,7 +18,7 @@ func TestExtractCSS(t *testing.T) {
 
 	var c int
 
-	ExtractCSS(strings.NewReader(css), func(_ string) {
+	ExtractCSS(strings.NewReader(css), func(_ string, code ...int) {
 		c++
 	})
 

@@ -35,7 +35,7 @@ func TestExtractSitemap(t *testing.T) {
 
 	l := make([]string, 0, 4)
 
-	ExtractSitemap(strings.NewReader(xml), u, func(s string) {
+	ExtractSitemap(strings.NewReader(xml), u, func(s string, code ...int) {
 		l = append(l, s)
 	})
 
@@ -66,7 +66,7 @@ func TestExtractSitemapIndex(t *testing.T) {
 
 	l := make([]string, 0, 3)
 
-	ExtractSitemap(strings.NewReader(xml), u, func(s string) {
+	ExtractSitemap(strings.NewReader(xml), u, func(s string, code ...int) {
 		l = append(l, s)
 	})
 
@@ -89,7 +89,7 @@ func TestExtractSitemapTokenError(t *testing.T) {
 
 	l := make([]string, 0, 1)
 
-	ExtractSitemap(strings.NewReader(xml), u, func(s string) {
+	ExtractSitemap(strings.NewReader(xml), u, func(s string, code ...int) {
 		l = append(l, s)
 	})
 
@@ -112,7 +112,7 @@ func TestExtractSitemapURLError(t *testing.T) {
 
 	l := make([]string, 0, 1)
 
-	ExtractSitemap(strings.NewReader(xml), u, func(s string) {
+	ExtractSitemap(strings.NewReader(xml), u, func(s string, code ...int) {
 		l = append(l, s)
 	})
 

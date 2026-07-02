@@ -25,7 +25,7 @@ import (
 )
 
 type crawlClient interface {
-	Get(context.Context, string) (io.ReadCloser, http.Header, error)
+	Get(context.Context, string) (io.ReadCloser, http.Header, int, error)
 	Head(context.Context, string) (http.Header, error)
 }
 
@@ -233,7 +233,7 @@ func (c *Crawler) initRobots(host *url.URL, web crawlClient) {
 	ctx, cancel := context.WithTimeout(context.Background(), c.cfg.Client.Timeout)
 	defer cancel()
 
-	body, _, err := web.Get(ctx, robots.URL(host))
+	body, _, statusCode, err := web.Get(ctx, robots.URL(host))
 	if err != nil {
 		var herr client.HTTPError
 
@@ -260,10 +260,10 @@ func (c *Crawler) initRobots(host *url.URL, web crawlClient) {
 
 	c.robots = rbt
 
-	c.crawlRobots(host)
+	c.crawlRobots(host, statusCode)
 }
 
-func (c *Crawler) crawlRobots(host *url.URL) {
+func (c *Crawler) crawlRobots(host *url.URL, statusCode int) {
 	base := *host
 	base.Fragment = ""
 	base.RawQuery = ""
@@ -272,12 +272,12 @@ func (c *Crawler) crawlRobots(host *url.URL) {
 		t := base
 		t.Path = u
 
-		c.linkHandler(atom.A, t.String())
+		c.linkHandler(atom.A, t.String(), statusCode)
 	}
 
 	for _, u := range c.robots.Sitemaps() {
 		if _, e := url.Parse(u); e == nil {
-			c.crawlHandler(u)
+			c.crawlHandler(u, statusCode)
 		}
 	}
 }
@@ -303,13 +303,19 @@ func (c *Crawler) isIncluded(v string) (yes bool) {
 	return true
 }
 
-func (c *Crawler) linkHandler(a atom.Atom, s string) {
+func (c *Crawler) linkHandler(a atom.Atom, s string, statusCode ...int) {
+	code := http.StatusOK
 	if !c.isIncluded(s) {
 		return
 	}
+
+	if len(statusCode) > 0 {
+		code = statusCode[0]
+	}
 	r := crawlResult{
-		URI:  s,
-		Hash: urlhash(s),
+		URI:        s,
+		Hash:       urlhash(s),
+		StatusCode: code,
 	}
 
 	fetch := (a == atom.A || a == atom.Iframe) ||
@@ -329,12 +335,12 @@ func (c *Crawler) linkHandler(a atom.Atom, s string) {
 	}
 }
 
-func (c *Crawler) staticHandler(s string) {
-	c.linkHandler(atom.Link, s)
+func (c *Crawler) staticHandler(s string, statusCode int) {
+	c.linkHandler(atom.Link, s, statusCode)
 }
 
-func (c *Crawler) crawlHandler(s string) {
-	c.linkHandler(atom.A, s)
+func (c *Crawler) crawlHandler(s string, statusCode ...int) {
+	c.linkHandler(atom.A, s, statusCode...)
 }
 
 func (c *Crawler) process(
@@ -343,7 +349,7 @@ func (c *Crawler) process(
 	base *url.URL,
 	uri string,
 ) {
-	body, hdrs, err := web.Get(ctx, uri)
+	body, hdrs, _, err := web.Get(ctx, uri)
 	if err != nil {
 		var herr client.HTTPError
 
@@ -355,7 +361,7 @@ func (c *Crawler) process(
 		}
 	}
 
-	handleStatic := func(s string) {
+	handleStatic := func(s string, statusCode ...int) {
 		var ok bool
 
 		switch {
@@ -368,7 +374,7 @@ func (c *Crawler) process(
 		}
 
 		if ok {
-			c.staticHandler(s)
+			c.staticHandler(s, statusCode[0])
 		}
 	}
 

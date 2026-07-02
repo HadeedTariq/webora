@@ -206,7 +206,7 @@ func TestExtractToken(t *testing.T) {
 				testBase,
 				tc.token,
 				&key,
-				func(_ atom.Atom, s string) {
+				func(_ atom.Atom, s string, code ...int) {
 					res = s
 				},
 			)
@@ -235,7 +235,7 @@ func TestExtractTokenJS(t *testing.T) {
 		HTMLParams{
 			Filter: AllowALL,
 			ScanJS: true,
-			HandleStatic: func(s string) {
+			HandleStatic: func(s string, code ...int) {
 				res = s
 			},
 		},
@@ -259,7 +259,7 @@ func TestExtractTokenCSS(t *testing.T) {
 		HTMLParams{
 			Filter:  AllowALL,
 			ScanCSS: true,
-			HandleStatic: func(s string) {
+			HandleStatic: func(s string, code ...int) {
 				res = s
 			},
 		},
@@ -323,7 +323,7 @@ func TestExtractURLS(t *testing.T) {
 			ExtractHTML(buf, testBase, HTMLParams{
 				Brute:  true,
 				Filter: AllowALL,
-				HandleHTML: func(_ atom.Atom, s string) {
+				HandleHTML: func(_ atom.Atom, s string, code ...int) {
 					res = s
 				},
 			})
@@ -348,7 +348,7 @@ loremipsumhTTp://foo fdfdfs HttPs://bar
 	res := []string{}
 	want := []string{"http://foo", "https://bar", "https://baz", "http://boo"}
 
-	handler := func(_ atom.Atom, s string) {
+	handler := func(_ atom.Atom, s string, code ...int) {
 		res = append(res, strings.ToLower(s))
 	}
 
@@ -379,7 +379,7 @@ func TestExtractAllowed(t *testing.T) {
 	ExtractHTML(buf, testBase, HTMLParams{
 		Brute:  true,
 		Filter: filter,
-		HandleHTML: func(_ atom.Atom, s string) {
+		HandleHTML: func(_ atom.Atom, s string, code ...int) {
 			res = append(res, s)
 		},
 	})

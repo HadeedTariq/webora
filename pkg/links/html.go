@@ -21,7 +21,7 @@ const (
 )
 
 // HTMLHandler is a callback for found links.
-type HTMLHandler func(atom.Atom, string)
+type HTMLHandler func(atom.Atom, string, ...int)
 
 // TokenFilter is a callback for token filtration.
 type TokenFilter func(html.Token) bool

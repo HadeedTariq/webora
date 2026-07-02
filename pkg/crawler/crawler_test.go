@@ -34,8 +34,8 @@ type testClient struct {
 func (tc *testClient) Get(
 	_ context.Context,
 	_ string,
-) (body io.ReadCloser, h http.Header, err error) {
-	return tc.bodyIO, nil, tc.err
+) (body io.ReadCloser, h http.Header, statusCode int, err error) {
+	return tc.bodyIO, nil, 0, tc.err
 }
 
 func (tc *testClient) Head(

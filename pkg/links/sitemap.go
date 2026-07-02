@@ -8,7 +8,7 @@ import (
 
 type (
 	// URLHandler is a callback for links.
-	URLHandler func(string)
+	URLHandler func(string, ...int)
 
 	entry struct {
 		Loc string `xml:"loc"`
